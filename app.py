@@ -12,6 +12,7 @@ class App:
 
         self.running = True
         self.lastTrackId = None
+        self.lastNoteId = None
 
     def start(self):
         self.spotify.login()
@@ -20,11 +21,19 @@ class App:
         while self.running:
             currentPlayback = self.spotify.getCurrentPlayback()
             if not currentPlayback:
-                print(currentPlayback)
-                self.wait(10)
+                print("Spotify | Not playing / Not available")
+                self.wait(60)
                 continue
 
             if currentPlayback['is_playing'] is False:
+                print("Spotify | Not playing")
+                #~ Delete the current note, only if it was created by this script
+                currentNotes = self.instagram.get_my_notes()['items']
+                if currentNotes:
+                    currentNote = currentNotes[0]
+                    if currentNote['id'] == self.lastNoteId:
+                        self.instagram.delete_note(currentNote['id'])
+
                 self.wait(60)
                 continue
 
@@ -44,6 +53,8 @@ class App:
             self.instagram.setStatus(
                 f"🎶 {track['name']} by {track['artists'][0]['name']}"
             )
+
+            self.lastNoteId = self.instagram.get_my_notes()['items'][0]['id']
 
             self.wait(timeLeft / 1000)
 

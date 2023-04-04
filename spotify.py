@@ -127,6 +127,9 @@ class Client:
             self.lastError = 401
             self.refreshToken()
             return self.apiRequest(method, endpoint, params, data)
+        
+        elif r.status_code == 204:
+            r.json = lambda: {}
 
         return r
 
