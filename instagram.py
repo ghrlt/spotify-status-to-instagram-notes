@@ -23,7 +23,13 @@ class Client(instagrapi.Client):
         if env.INSTAGRAM_2FA_SEED:
             self.mfa_code = self.totp_generate_code(env.INSTAGRAM_2FA_SEED)
         
-        self.login(env.INSTAGRAM_USERNAME, env.INSTAGRAM_PASSWORD, verification_code=self.mfa_code)
+        try:
+            self.login(env.INSTAGRAM_USERNAME, env.INSTAGRAM_PASSWORD, verification_code=self.mfa_code)
+        except instagrapi.exceptions.TwoFactorRequired:
+            print("Instagram | 2FA is enabled. But you did not provide a 2FA seed. Please provide a 2FA seed in the .env file.")
+            self.mfa_code = input("Instagram | Please enter the 2FA code: ")
+            self.login(env.INSTAGRAM_USERNAME, env.INSTAGRAM_PASSWORD, verification_code=self.mfa_code)
+
         self.dump_settings(self.session_settings_path)
 
         print("Instagram | Successfully logged in as", self.username)
