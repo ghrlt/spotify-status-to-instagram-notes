@@ -131,6 +131,7 @@ class Client:
         elif r.status_code == 204:
             r.json = lambda: {}
 
+        self.lastError = None
         return r
 
 

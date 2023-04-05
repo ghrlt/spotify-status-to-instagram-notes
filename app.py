@@ -42,14 +42,18 @@ class App:
             
             track = currentPlayback['item']
             timeLeft = track['duration_ms'] - currentPlayback['progress_ms']
-            
+            if timeLeft <= 0:
+                # Sometimes, the progress_ms is higher than/equal to the duration_ms..
+                # So let's just avoid spamming Spotify API
+                timeLeft = 20
+
             if track['id'] == self.lastTrackId:
                 self.wait(timeLeft / 1000)
                 continue
 
             self.lastTrackId = track['id']
 
-            print(f"Playing {track['name']} by {track['artists'][0]['name']}, next in {timeLeft/1000}s")            
+            print(f"Currently playing {track['name']} by {track['artists'][0]['name']}, next song in {timeLeft/1000}s")            
             self.instagram.setStatus(
                 f"🎶 {track['name']} by {track['artists'][0]['name']}"
             )
