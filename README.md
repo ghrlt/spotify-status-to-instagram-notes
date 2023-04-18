@@ -13,9 +13,9 @@ Then, clone this project into your machine:<br>
 Go in the directory<br>
 `cd spotify-status-to-ig-notes`
 
-Install the required packages
+Install the required packages<br>
 `python3.10 -m pip install -r requirements.txt`
-
+<br><br>
 
 Create a file named `.env.local` and write in the following (Delete comments):
 ```js
