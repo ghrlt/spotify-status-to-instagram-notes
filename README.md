@@ -13,6 +13,10 @@ Then, clone this project into your machine:<br>
 Go in the directory<br>
 `cd spotify-status-to-ig-notes`
 
+Install the required packages
+`python3.10 -m pip install -r requirements.txt`
+
+
 Create a file named `.env.local` and write in the following (Delete comments):
 ```js
 // You can find this on your Spotify app page
