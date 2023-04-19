@@ -41,8 +41,6 @@ class Client:
         oauthThread = threading.Thread(target=self.oauth.run, args=(threadEvent,), daemon=True)
         oauthThread.start()
 
-        print("Open the following URL in your browser:", "http://"+self.oauth.host+":"+self.oauth.port+"/authorize")
-
         threadEvent.wait()
         #TODO: Find a proper way to stop the flask server...
 
@@ -95,10 +93,15 @@ class Client:
                     "scope": self.scope
                 }, f)
         else:
-            with open(self.session_file_path, "r") as f:
-                settings = json.load(f)
-            
-            self.refreshSession(**settings)
+            try:
+                with open(self.session_file_path, "r") as f:
+                    settings = json.load(f)
+    
+                self.refreshSession(**settings)
+    
+            except FileNotFoundError:
+                self.access_token = None
+
 
 
     def getUser(self):
@@ -155,6 +158,8 @@ class OauthServer:
             return self.callback()
         
         self.threadEvent = threadEvent
+
+        print("Open the following URL in your browser:", "http://"+self.host+":"+self.port+"/authorize")
 
         #~ Prevent Flask from printing in the console
         sys.stdout = open(os.devnull, 'w')
