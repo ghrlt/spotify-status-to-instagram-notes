@@ -18,7 +18,7 @@ class Client:
     def __init__(self):
         self.session_file_path = f"{env.WORKING_DIRECTORY_PATH}/spotify.session"
 
-        self.lastError = None
+        self.lastStatusCode = None
 
         self.refreshSession()
 
@@ -123,18 +123,23 @@ class Client:
                 "Authorization": f"Bearer {self.access_token}"
             }
         )
+        self.lastStatusCode = r.status_code
+
         if r.status_code == 401:
-            if self.lastError == 401:
+            if self.lastStatusCode == 401:
                 raise Exception("Invalid access token. Unable to refresh it. Please re-authorize the app (delete spotify.session).")
 
-            self.lastError = 401
             self.refreshToken()
             return self.apiRequest(method, endpoint, params, data)
+        
+        elif r.status_code in range(500, 599):
+            print(f"Spotify | API Request returned status code {r.status_code}...")
+
+            r.json = lambda: {}
         
         elif r.status_code == 204:
             r.json = lambda: {}
 
-        self.lastError = None
         return r
 
 
