@@ -1,3 +1,5 @@
 instagrapi
+pillow
 requests
 python-dotenv
+flask
