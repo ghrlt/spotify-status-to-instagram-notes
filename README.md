@@ -8,10 +8,10 @@ First, you'll need a [Spotify dev app](https://developer.spotify.com/documentati
 <br>**Add `http://localhost:1811/callback` as a registered Redirect URI** 
 
 Then, clone this project into your machine:<br>
-`git clone https://github.com/ghrlt/spotify-status-to-ig-notes.git`
+`git clone https://github.com/ghrlt/spotify-status-to-instagram-notes.git`
 
 Go in the directory<br>
-`cd spotify-status-to-ig-notes`
+`cd spotify-status-to-instagram-notes`
 
 Install the required packages<br>
 `python3.10 -m pip install -r requirements.txt`
