@@ -14,6 +14,19 @@ class App:
         self.lastTrackId = None
         self.lastNoteId = None
 
+        self.playbackFailCount = 0
+
+    def deleteInstagramNote(
+        self,
+        onlyIfCreatedByThisScript=False
+    ):
+        currentNotes = self.instagram.get_my_notes()['items']
+        if currentNotes:
+            currentNote = currentNotes[0]
+            if currentNote['id'] == self.lastNoteId or self.lastNoteId == None or onlyIfCreatedByThisScript:
+                self.instagram.delete_note(currentNote['id'])
+                print("Instagram | Deleted note")
+
     def start(self):
         self.spotify.login()
         self.instagram._login()
@@ -22,17 +35,19 @@ class App:
             currentPlayback = self.spotify.getCurrentPlayback()
             if not currentPlayback:
                 print("Spotify | Not playing / Not available")
-                self.wait(60)
+                self.wait(10)
+                self.playbackFailCount += 1
+
+                if self.playbackFailCount >= 3:
+                    print("Spotify | Failed to get playback 3 times, deleting note")
+                    self.deleteInstagramNote(onlyIfCreatedByThisScript=True)
+                    self.playbackFailCount = 0
+
                 continue
 
             if currentPlayback['is_playing'] is False:
                 print("Spotify | Not playing")
-                #~ Delete the current note, only if it was created by this script
-                currentNotes = self.instagram.get_my_notes()['items']
-                if currentNotes:
-                    currentNote = currentNotes[0]
-                    if currentNote['id'] == self.lastNoteId:
-                        self.instagram.delete_note(currentNote['id'])
+                self.deleteInstagramNote(onlyIfCreatedByThisScript=True)
 
                 self.wait(60)
                 continue
