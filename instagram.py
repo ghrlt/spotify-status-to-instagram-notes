@@ -1,5 +1,6 @@
 import os
 import instagrapi
+import requests
 
 import env
 
@@ -34,9 +35,30 @@ class Client(instagrapi.Client):
 
         print("Instagram | Successfully logged in as", self.username)
 
-    def setStatus(self, status: str):
+    def getOurNote(self) -> instagrapi.types.Note:
+        try:
+            return list(
+                filter(
+                    lambda note: note.user_id == str(self.user_id),
+                    self.get_notes()
+                )
+            )[0]
+        except:
+            raise Exception('User has no note. Please create one first.')
+        
+    def deleteNote(self, noteId: str):
+        try:
+            if self.delete_note(noteId) == False:
+                print("Instagram | Failed to delete note")
+        except requests.exceptions.RetryError:
+            print("Instagram | Failed to delete note")
+
+        self.setStatus("🎶 Not playing", audience=env.INSTAGRAM_DEFAULT_AUDIENCE)
+
+
+    def setStatus(self, status: str, audience: int = 0):
         if len(status) > 60:
             # raise Exception("Status is too long. Max 60 characters.")
             status = status[:57] + "..."
 
-        self.send_note(status, 0)
+        self.create_note(status, audience)

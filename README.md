@@ -32,6 +32,13 @@ If you switch account between prod/dev environnement, you can also use `.env.pro
 
 <br>
 
+If you wish to show notes to your close friends only, add the following line in your `.env.local` file:
+```
+INSTAGRAM_DEFAULT_AUDIENCE="1"
+```
+
+<br>
+
 ## Configuration
 You can now start the app!<br>
 `python3.10 app.py`

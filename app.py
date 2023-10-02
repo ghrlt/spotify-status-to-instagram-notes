@@ -12,7 +12,7 @@ class App:
 
         self.running = True
         self.lastTrackId = None
-        self.lastNoteId = None
+        self.lastSetNoteId = None
 
         self.playbackFailCount = 0
 
@@ -20,12 +20,20 @@ class App:
         self,
         onlyIfCreatedByThisScript=False
     ):
-        currentNotes = self.instagram.get_my_notes()['items']
-        if currentNotes:
-            currentNote = currentNotes[0]
-            if currentNote['id'] == self.lastNoteId or self.lastNoteId == None or onlyIfCreatedByThisScript:
-                self.instagram.delete_note(currentNote['id'])
+        note = self.instagram.getOurNote()
+
+        if onlyIfCreatedByThisScript:
+            print("Instagram | Deleting note, if created by this script")
+            if note.id == self.lastSetNoteId:
+                self.instagram.deleteNote(note.id)
                 print("Instagram | Deleted note")
+            else:
+                print("Instagram | Note was not created by this script, skipping")
+        else:
+            print("Instagram | Deleting note")
+            self.instagram.deleteNote(note.id)
+            print("Instagram | Deleted note")
+
 
     def start(self):
         self.spotify.login()
@@ -60,7 +68,7 @@ class App:
             if timeLeft <= 0:
                 # Sometimes, the progress_ms is higher than/equal to the duration_ms..
                 # So let's just avoid spamming Spotify API
-                timeLeft = 20
+                timeLeft = 2000
 
             if track['id'] == self.lastTrackId:
                 self.wait(timeLeft / 1000)
@@ -70,10 +78,11 @@ class App:
 
             print(f"Currently playing {track['name']} by {track['artists'][0]['name']}, next song in {timeLeft/1000}s")            
             self.instagram.setStatus(
-                f"🎶 {track['name']} by {track['artists'][0]['name']}"
+                f"DEV🎶 {track['name']} by {track['artists'][0]['name']}",
+                audience=env.INSTAGRAM_DEFAULT_AUDIENCE
             )
 
-            self.lastNoteId = self.instagram.get_my_notes()['items'][0]['id']
+            self.lastSetNoteId = self.instagram.getOurNote().id
 
             self.wait(timeLeft / 1000)
 
