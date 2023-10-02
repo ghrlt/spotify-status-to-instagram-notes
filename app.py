@@ -78,7 +78,7 @@ class App:
 
             print(f"Currently playing {track['name']} by {track['artists'][0]['name']}, next song in {timeLeft/1000}s")            
             self.instagram.setStatus(
-                f"DEV🎶 {track['name']} by {track['artists'][0]['name']}",
+                f"🎶 {track['name']} by {track['artists'][0]['name']}",
                 audience=env.INSTAGRAM_DEFAULT_AUDIENCE
             )
 
