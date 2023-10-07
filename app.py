@@ -20,6 +20,25 @@ class App:
         self,
         onlyIfCreatedByThisScript=False
     ):
+        if self.lastSetNoteId is None:
+            # print("Instagram | No known note to delete")
+            if onlyIfCreatedByThisScript:
+                print("Instagram | No known note to delete")
+                #~ Let's still try to check if there is a note, corresponding to our note pattern
+                #~ If there is, we will delete it
+                #~ If there is not, we will just return
+                try:
+                    note = self.instagram.getOurNote()
+                except:
+                    return
+                
+                if note.text.startswith("🎶"):
+                    print("Instagram | Deleting pattern matching note")
+                    self.instagram.deleteNote(note.id)
+                    print("Instagram | Deleted note")
+
+            return
+
         note = self.instagram.getOurNote()
 
         if onlyIfCreatedByThisScript:
