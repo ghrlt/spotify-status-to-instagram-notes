@@ -123,13 +123,13 @@ class Client:
                 "Authorization": f"Bearer {self.access_token}"
             }
         )
-        self.lastStatusCode = r.status_code
 
         if r.status_code == 401:
             if self.lastStatusCode == 401:
                 raise Exception("Invalid access token. Unable to refresh it. Please re-authorize the app (delete spotify.session).")
 
             self.refreshToken()
+            self.lastStatusCode = r.status_code
             return self.apiRequest(method, endpoint, params, data)
         
         elif r.status_code in range(500, 599):
@@ -140,6 +140,7 @@ class Client:
         elif r.status_code == 204:
             r.json = lambda: {}
 
+        self.lastStatusCode = r.status_code
         return r
 
 
