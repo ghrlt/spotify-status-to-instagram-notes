@@ -1,3 +1,12 @@
+> THIS REPO HAS BEEN ARCHIVED ON June 13 of 2025.
+> 1) because i was not using it anymore for too long,
+> 2) because Instagram themself implemented that feature in their app!
+
+>  Thanks to past users, issuers & contributors!
+
+> <img src="https://github.com/user-attachments/assets/0c0e25ed-65c5-477e-8205-fabd7e1a5e19" height="400">
+
+
 # Spotify status to Instagram notes
 
 You like to share your Spotify activity on Discord? You ever wanted to do it on Instagram too? Well, this program is made for you.
